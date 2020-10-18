@@ -6,12 +6,12 @@ Sub vba_hw()
     Dim OpenPrice As Double
     Dim ClosePrice As Double
     Dim YearlyChange As Double
-    Dim YearlyPercentage As Double
-    Dim TickerTableRow As Integer
+    Dim YearlyPercentage As Long
+    Dim TickerTableRow As Double
         TickerTableRow = 2
     Dim TotalVol As Double
         TotalVol = 0
-    Dim day As Integer
+    Dim day As Double
         day = 0
        
 'Determine last row
@@ -43,8 +43,22 @@ For i = 2 To LastRow
         'Record closing price
         ClosePrice = Cells(i, 6).Value
         
-        Range("M" & TickerTableRow).Value = OpenPrice
-        Range("N" & TickerTableRow).Value = ClosePrice
+        'Calculate yearly change from opening price to closing price
+        YearlyChange = ClosePrice - OpenPrice
+        
+        'Calculate Percentage change from opening price to closing price
+        If OpenPrice <> 0 Then
+        YearlyPercentage = YearlyChange / OpenPrice
+        
+        
+        End If
+         
+        'Print yearly change
+        Range("J" & TickerTableRow).Value = YearlyChange
+        
+        'Print yearly percentage
+        Range("K" & TickerTableRow).Value = Round(YearlyPercentage, 2)
+        Range("K" & TickerTableRow).NumberFormat = "0.00%"
         
         'New row in ticker table
         TickerTableRow = TickerTableRow + 1
@@ -66,30 +80,25 @@ For i = 2 To LastRow
         
         If day = 1 Then
             OpenPrice = Cells(i, 3).Value
-           
         End If
         
    End If
-        
-       
-        
-        
-        'Calculate yearly change from opening price to closing price
-        YearlyChange = ClosePrice - OpenPrice
-        
-        'Calculate Percentage change from opening price to closing price
-        YearlyPercentage = YearlyChange
-         
-        'Print yearly change
-        Range("J" & TickerTableRow).Value = YearlyChange
-        
-        'Print yearly percentage
-        Range("K" & TickerTableRow).Value = YearlyPercentage
-        
-
-    
-'Next i
+   
 Next i
 
+'Formating and coloring
+For j = 2 To LastRow
+    
+    If Cells(j, 10).Value >= 0 Then
+        Cells(j, 10).Interior.ColorIndex = 4
+        
+    Else
+        Cells(j, 10).Interior.ColorIndex = 3
+    
+    End If
+    
+Next j
+    
+        
 
 End Sub
